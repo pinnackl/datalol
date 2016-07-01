@@ -8,7 +8,10 @@
 		<!-- Inclusion JS (librairie + scripts de création de graph) -->
 		<script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
+		<script src="https://code.highcharts.com/highcharts.js"></script>
+		<script src="https://code.highcharts.com/modules/exporting.js"></script>
 		<script type="text/javascript" src="js/datalol.js"></script>
+		<script type="text/javascript" src="js/highchartTheme.js"></script>
 	</head>
 	<body>
 		<input type="text" id="search-input">
@@ -16,11 +19,6 @@
 		<div class="container">
 			<canvas id="chartRecentGames"></canvas>
 		</div>
-		<div id="champion-1">
-		</div>
-		<div id="champion-2">
-		</div>
-		<div id="champion-3">
-		</div>
+		<div id="chartMostPlayedChampions" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 	</body>
 </html>

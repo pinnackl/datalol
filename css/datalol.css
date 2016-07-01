@@ -2,3 +2,15 @@
 	width: 400px;
 	height: 400px;
 }
+
+.champion {
+	width: 50px;
+}
+
+#chartMostPlayedChampions {
+	height: 500px !important;
+}
+
+.highcharts-container {
+	overflow: visible !important;
+}

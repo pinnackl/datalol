@@ -14,3 +14,12 @@
 .highcharts-container {
 	overflow: visible !important;
 }
+
+.participants {
+	display: block;
+}
+
+#friendly-players,
+#ennemy-players {
+	display: inline-block;
+}

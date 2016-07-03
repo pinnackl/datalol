@@ -4,18 +4,17 @@ $(document).ready(function() {
 
 	document.getElementById("search-button").addEventListener("click", function() {
 		var summonerName = document.getElementById("search-input").value.toLowerCase();
-		summonerName = "alaixys";
+		// summonerName = "alaixys";
 		$.get(urlRiotApi + "v1.4/summoner/by-name/" + summonerName + "?api_key=" + apiKey, function(response) {
 			var summonerId = response[summonerName].id;
 			drawChartLastMatches(summonerId);
 			getMostPlayedChampions(summonerId);
-			getStatsSummoner(summonerId);
+			getCurrentGame(summonerId);
 		});
 	});
 
 	function drawChartLastMatches(summonerId) {
 		$.get(urlRiotApi + "v1.3/game/by-summoner/" + summonerId + "/recent?api_key=" + apiKey, function(response) {
-			console.log(response);
 			var lastGames = response.games,
 				gamesWon = 0,
 				gamesLose = 0;
@@ -93,8 +92,24 @@ $(document).ready(function() {
 		});
 	}
 
-	function getStatsSummoner(summonerId) {
-		// /api/lol/{region}/v1.3/stats/by-summoner/{summonerId}/summary
+	function getCurrentGame(summonerId) {
+		$.get(window.location.href + "/api.php?method=getCurrentGame&summonerId=" + summonerId, function(response) {
+			console.log(JSON.parse(response));
+			var response = JSON.parse(response);
+			var gameLenght = response.gameLenght;
+			var participants = response.participants;
+			for(var i = 0; i < participants.length; i++) {
+				var span = document.createElement('span');
+				span.className = "participants";
+				span.innerHTML = participants[i].summonerName;
+				if(participants[i].teamId === 100) {
+					document.getElementById("friendly-players").appendChild(span);
+				} else {
+					document.getElementById("ennemy-players").appendChild(span);
+				}
+			}
+		});
+		
 	}
 
 	function drawChartMostPlayedChampions(data) {

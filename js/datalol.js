@@ -102,10 +102,13 @@ $(document).ready(function() {
 				var span = document.createElement('span');
 				span.className = "participants";
 				span.innerHTML = participants[i].summonerName;
+				$.get("https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion/" + participants[i].championId + "?api_key=" + apiKey, function(response) {
+					console.log(response);
+				});
 				if(participants[i].teamId === 100) {
-					document.getElementById("friendly-players").appendChild(span);
+					document.getElementById("friendly-player-" + (i + 1)).getElementsByClassName("name")[0].innerHTML = participants[i].summonerName;
 				} else {
-					document.getElementById("ennemy-players").appendChild(span);
+					document.getElementById("ennemy-player-" + (i + 1)).getElementsByClassName("name")[0].innerHTML = participants[i].summonerName;
 				}
 			}
 		});

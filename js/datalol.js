@@ -3,7 +3,7 @@ $(document).ready(function() {
 	var apiKey = "RGAPI-867226E0-C67A-4686-88B0-9F027A3D4CA8";
 
 	document.getElementById("search-button").addEventListener("click", function() {
-		var summonerName = document.getElementById("search-input").value.toLowerCase();
+		var summonerName = document.getElementById("search-input").value.toLowerCase().replace(/\s+/g, '');
 		// summonerName = "alaixys";
 		$.get(urlRiotApi + "v1.4/summoner/by-name/" + summonerName + "?api_key=" + apiKey, function(response) {
 			var summonerId = response[summonerName].id;
@@ -96,15 +96,33 @@ $(document).ready(function() {
 		$.get(window.location.href + "/api.php?method=getCurrentGame&summonerId=" + summonerId, function(response) {
 			console.log(JSON.parse(response));
 			var response = JSON.parse(response);
-			var gameLenght = response.gameLenght;
+			var gameLength = response.gameLength;
 			var participants = response.participants;
+
+			var timer = new Timer();
+			timer.start({precision: 'seconds', startValues: {seconds: gameLength}});
+			timer.addEventListener('secondsUpdated', function (e) {
+			    document.getElementById("timer").innerHTML = timer.getTimeValues().toString();
+			});
+       
+			var tempI = 0;
 			for(var i = 0; i < participants.length; i++) {
 				var span = document.createElement('span');
 				span.className = "participants";
 				span.innerHTML = participants[i].summonerName;
-				$.get("https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion/" + participants[i].championId + "?api_key=" + apiKey, function(response) {
-					console.log(response);
-				});
+				jQuery.ajax({
+			        url: "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion/" + participants[i].championId + "?api_key=" + apiKey + "&champData=all",
+			        success: function (response) {
+			            var iconChampion = document.createElement('i');
+						iconChampion.className = "icon champions-lol-28 " + response.key.toLowerCase();
+						if(participants[i].teamId === 100) {
+							document.getElementById("friendly-player-" + (i + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
+						} else {
+							document.getElementById("ennemy-player-" + (i + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
+						}
+				    },
+			        async: false
+			    });
 				if(participants[i].teamId === 100) {
 					document.getElementById("friendly-player-" + (i + 1)).getElementsByClassName("name")[0].innerHTML = participants[i].summonerName;
 				} else {

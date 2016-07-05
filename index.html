@@ -4,6 +4,7 @@
 		<title>Data Vizualisation - TP1</title>
 		<!-- Inclusion CSS (librairie + perso) -->
 		<link rel="stylesheet" type="text/css" href="css/datalol.css">
+		<link rel="stylesheet" type="text/css" href="css/champions.css">
 		
 		<!-- Inclusion JS (librairie + scripts de création de graph) -->
 		<script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
@@ -12,6 +13,7 @@
 		<script src="https://code.highcharts.com/modules/exporting.js"></script>
 		<script type="text/javascript" src="js/datalol.js"></script>
 		<script type="text/javascript" src="js/highchartTheme.js"></script>
+		<script type="text/javascript" src="js/timer.js"></script>
 	</head>
 	<body>
 		<input type="text" id="search-input">
@@ -20,6 +22,11 @@
 			<canvas id="chartRecentGames"></canvas>
 		</div>
 		<div id="current-game">
+			<div id="timer">
+				<span class="hours">00:</span>
+				<span class="minutes">00:</span>
+				<span class="seconds">00</span>
+			</div>
 			<div id="friendly-players">
 				<table>
 					<thead>
@@ -33,18 +40,18 @@
 					</thead>
 					<tbody>
 						<tr id="friendly-player-1">
-							<td class="name">a</td>
-							<td class="champion">a</td>
-							<td class="normal-wins">a</td>
-							<td class="ranked-wins-losses">a</td>
-							<td class="champion-kda">a</td>
+							<td class="name"></td>
+							<td class="champion"></td>
+							<td class="normal-wins"></td>
+							<td class="ranked-wins-losses"></td>
+							<td class="champion-kda"></td>
 						</tr>
 						<tr id="friendly-player-2">
-							<td class="name">a</td>
-							<td class="champion">a</td>
-							<td class="normal-wins">a</td>
-							<td class="ranked-wins-losses">a</td>
-							<td class="champion-kda">a</td>
+							<td class="name"></td>
+							<td class="champion"></td>
+							<td class="normal-wins"></td>
+							<td class="ranked-wins-losses"></td>
+							<td class="champion-kda"></td>
 						</tr>
 						<tr id="friendly-player-3">
 							<td class="name"></td>
@@ -83,18 +90,18 @@
 					</thead>
 					<tbody>
 						<tr id="ennemy-player-6">
-							<td class="name">a</td>
-							<td class="champion">a</td>
-							<td class="normal-wins">a</td>
-							<td class="ranked-wins-losses">a</td>
-							<td class="champion-kda">a</td>
+							<td class="name"></td>
+							<td class="champion"></td>
+							<td class="normal-wins"></td>
+							<td class="ranked-wins-losses"></td>
+							<td class="champion-kda"></td>
 						</tr>
 						<tr id="ennemy-player-7">
-							<td class="name">a</td>
-							<td class="champion">a</td>
-							<td class="normal-wins">a</td>
-							<td class="ranked-wins-losses">a</td>
-							<td class="champion-kda">a</td>
+							<td class="name"></td>
+							<td class="champion"></td>
+							<td class="normal-wins"></td>
+							<td class="ranked-wins-losses"></td>
+							<td class="champion-kda"></td>
 						</tr>
 						<tr id="ennemy-player-8">
 							<td class="name"></td>

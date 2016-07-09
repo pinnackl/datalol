@@ -5,7 +5,7 @@ $(document).ready(function() {
 	document.getElementById("search-button").addEventListener("click", function() {
 		var summonerName = document.getElementById("search-input").value.toLowerCase().replace(/\s+/g, '');
 		// summonerName = "alaixys";
-		$.get(urlRiotApi + "v1.4/summoner/by-name/" + summonerName + "?api_key=" + apiKey, function(response) {
+		$.get(urlRiotApi + "v1.4/summoner/by-name/" + encodeURI(summonerName) + "?api_key=" + apiKey, function(response) {
 			var summonerId = response[summonerName].id;
 			drawChartLastMatches(summonerId);
 			getMostPlayedChampions(summonerId);
@@ -105,7 +105,8 @@ $(document).ready(function() {
 			    document.getElementById("timer").innerHTML = timer.getTimeValues().toString();
 			});
        
-			var tempI = 0;
+			var tempIChampion = 0;
+			var tempIPlayer = 0;
 			for(var i = 0; i < participants.length; i++) {
 				var span = document.createElement('span');
 				span.className = "participants";
@@ -115,14 +116,37 @@ $(document).ready(function() {
 			        success: function (response) {
 			            var iconChampion = document.createElement('i');
 						iconChampion.className = "icon champions-lol-28 " + response.key.toLowerCase();
-						if(participants[i].teamId === 100) {
-							document.getElementById("friendly-player-" + (i + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
+						if(participants[tempIChampion].teamId === 100) {
+							document.getElementById("friendly-player-" + (tempIChampion + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
 						} else {
-							document.getElementById("ennemy-player-" + (i + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
+							document.getElementById("ennemy-player-" + (tempIChampion + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
 						}
-				    },
-			        async: false
+				    tempIChampion++;
+				    }
 			    });
+			    console.log(participants[i].summonerId);
+			    $.get(urlRiotApi + "v1.3/stats/by-summoner/" + participants[i].summonerId + "/summary?api_key=" + apiKey, function(response) {
+					var playerStats = response.playerStatSummaries;
+					var totalWins = 0,
+						rankedWins = 0,
+						rankedLosses = 0;
+
+					for(var i = 0; i < playerStats.length; i++) {
+						totalWins += playerStats[i].wins;
+						if(playerStats[i].playerStatSummaryType == "RankedSolo5x5") {
+							rankedWins = playerStats[i].wins;
+							rankedLosses = playerStats[i].losses;
+						}
+					}
+					if(participants[tempIPlayer].teamId === 100) {
+						document.getElementById("friendly-player-" + (tempIPlayer + 1)).getElementsByClassName("normal-wins")[0].innerHTML = totalWins;
+						document.getElementById("friendly-player-" + (tempIPlayer + 1)).getElementsByClassName("ranked-wins-losses")[0].innerHTML = rankedWins + "/" + rankedLosses;
+					} else {
+						document.getElementById("ennemy-player-" + (tempIPlayer + 1)).getElementsByClassName("normal-wins")[0].innerHTML = totalWins;
+						document.getElementById("ennemy-player-" + (tempIPlayer + 1)).getElementsByClassName("ranked-wins-losses")[0].innerHTML = rankedWins + "/" + rankedLosses;
+					}
+					tempIPlayer++;
+				});
 				if(participants[i].teamId === 100) {
 					document.getElementById("friendly-player-" + (i + 1)).getElementsByClassName("name")[0].innerHTML = participants[i].summonerName;
 				} else {

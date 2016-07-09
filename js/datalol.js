@@ -107,52 +107,106 @@ $(document).ready(function() {
        
 			var tempIChampion = 0;
 			var tempIPlayer = 0;
-			for(var i = 0; i < participants.length; i++) {
-				var span = document.createElement('span');
-				span.className = "participants";
-				span.innerHTML = participants[i].summonerName;
-				jQuery.ajax({
-			        url: "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion/" + participants[i].championId + "?api_key=" + apiKey + "&champData=all",
-			        success: function (response) {
-			            var iconChampion = document.createElement('i');
-						iconChampion.className = "icon champions-lol-28 " + response.key.toLowerCase();
-						if(participants[tempIChampion].teamId === 100) {
-							document.getElementById("friendly-player-" + (tempIChampion + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
-						} else {
-							document.getElementById("ennemy-player-" + (tempIChampion + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
-						}
-				    tempIChampion++;
-				    }
-			    });
-			    console.log(participants[i].summonerId);
-			    $.get(urlRiotApi + "v1.3/stats/by-summoner/" + participants[i].summonerId + "/summary?api_key=" + apiKey, function(response) {
-					var playerStats = response.playerStatSummaries;
-					var totalWins = 0,
-						rankedWins = 0,
-						rankedLosses = 0;
+			var looper = 10;
+			var i = 0;
+			(function myLoop () {          
+			   setTimeout(function () {
+			      	var span = document.createElement('span');
+					span.className = "participants";
+					span.innerHTML = participants[i].summonerName;
+					jQuery.ajax({
+				        url: "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion/" + participants[i].championId + "?api_key=" + apiKey + "&champData=all",
+				        success: function (response) {
+				            var iconChampion = document.createElement('i');
+							iconChampion.className = "icon champions-lol-28 " + response.key.toLowerCase();
+							if(participants[tempIChampion].teamId === 100) {
+								document.getElementById("friendly-player-" + (tempIChampion + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
+							} else {
+								document.getElementById("ennemy-player-" + (tempIChampion + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
+							}
+					    tempIChampion++;
+					    }
+				    });
 
-					for(var i = 0; i < playerStats.length; i++) {
-						totalWins += playerStats[i].wins;
-						if(playerStats[i].playerStatSummaryType == "RankedSolo5x5") {
-							rankedWins = playerStats[i].wins;
-							rankedLosses = playerStats[i].losses;
+				    $.get(urlRiotApi + "v1.3/stats/by-summoner/" + participants[i].summonerId + "/summary?api_key=" + apiKey, function(response) {
+						var playerStats = response.playerStatSummaries;
+						var totalWins = 0,
+							rankedWins = 0,
+							rankedLosses = 0;
+
+
+						for(var i = 0; i < playerStats.length; i++) {
+							totalWins += playerStats[i].wins;
+							if(playerStats[i].playerStatSummaryType == "RankedSolo5x5") {
+								rankedWins = playerStats[i].wins;
+								rankedLosses = playerStats[i].losses;
+							}
 						}
-					}
-					if(participants[tempIPlayer].teamId === 100) {
-						document.getElementById("friendly-player-" + (tempIPlayer + 1)).getElementsByClassName("normal-wins")[0].innerHTML = totalWins;
-						document.getElementById("friendly-player-" + (tempIPlayer + 1)).getElementsByClassName("ranked-wins-losses")[0].innerHTML = rankedWins + "/" + rankedLosses;
+						if(participants[tempIPlayer].teamId === 100) {
+							document.getElementById("friendly-player-" + (tempIPlayer + 1)).getElementsByClassName("normal-wins")[0].innerHTML = totalWins;
+							document.getElementById("friendly-player-" + (tempIPlayer + 1)).getElementsByClassName("ranked-wins-losses")[0].innerHTML = rankedWins + "/" + rankedLosses;
+						} else {
+							document.getElementById("ennemy-player-" + (tempIPlayer + 1)).getElementsByClassName("normal-wins")[0].innerHTML = totalWins;
+							document.getElementById("ennemy-player-" + (tempIPlayer + 1)).getElementsByClassName("ranked-wins-losses")[0].innerHTML = rankedWins + "/" + rankedLosses;
+						}
+						tempIPlayer++;
+					});
+					if(participants[i].teamId === 100) {
+						document.getElementById("friendly-player-" + (i + 1)).getElementsByClassName("name")[0].innerHTML = participants[i].summonerName;
 					} else {
-						document.getElementById("ennemy-player-" + (tempIPlayer + 1)).getElementsByClassName("normal-wins")[0].innerHTML = totalWins;
-						document.getElementById("ennemy-player-" + (tempIPlayer + 1)).getElementsByClassName("ranked-wins-losses")[0].innerHTML = rankedWins + "/" + rankedLosses;
+						document.getElementById("ennemy-player-" + (i + 1)).getElementsByClassName("name")[0].innerHTML = participants[i].summonerName;
 					}
-					tempIPlayer++;
-				});
-				if(participants[i].teamId === 100) {
-					document.getElementById("friendly-player-" + (i + 1)).getElementsByClassName("name")[0].innerHTML = participants[i].summonerName;
-				} else {
-					document.getElementById("ennemy-player-" + (i + 1)).getElementsByClassName("name")[0].innerHTML = participants[i].summonerName;
-				}
-			}
+					i++;               
+			      	if (i<10) myLoop();      //  decrement i and call myLoop again if i > 0
+			    }, 3000)
+			})(10); 
+			// for(var i = 0; i < participants.length; i++) {
+			// 	var span = document.createElement('span');
+			// 	span.className = "participants";
+			// 	span.innerHTML = participants[i].summonerName;
+			// 	jQuery.ajax({
+			//         url: "https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion/" + participants[i].championId + "?api_key=" + apiKey + "&champData=all",
+			//         success: function (response) {
+			//             var iconChampion = document.createElement('i');
+			// 			iconChampion.className = "icon champions-lol-28 " + response.key.toLowerCase();
+			// 			if(participants[tempIChampion].teamId === 100) {
+			// 				document.getElementById("friendly-player-" + (tempIChampion + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
+			// 			} else {
+			// 				document.getElementById("ennemy-player-" + (tempIChampion + 1)).getElementsByClassName("champion")[0].appendChild(iconChampion);
+			// 			}
+			// 	    tempIChampion++;
+			// 	    }
+			//     });
+
+			//     $.get(urlRiotApi + "v1.3/stats/by-summoner/" + participants[i].summonerId + "/summary?api_key=" + apiKey, function(response) {
+			// 		var playerStats = response.playerStatSummaries;
+			// 		var totalWins = 0,
+			// 			rankedWins = 0,
+			// 			rankedLosses = 0;
+
+
+			// 		for(var i = 0; i < playerStats.length; i++) {
+			// 			totalWins += playerStats[i].wins;
+			// 			if(playerStats[i].playerStatSummaryType == "RankedSolo5x5") {
+			// 				rankedWins = playerStats[i].wins;
+			// 				rankedLosses = playerStats[i].losses;
+			// 			}
+			// 		}
+			// 		if(participants[tempIPlayer].teamId === 100) {
+			// 			document.getElementById("friendly-player-" + (tempIPlayer + 1)).getElementsByClassName("normal-wins")[0].innerHTML = totalWins;
+			// 			document.getElementById("friendly-player-" + (tempIPlayer + 1)).getElementsByClassName("ranked-wins-losses")[0].innerHTML = rankedWins + "/" + rankedLosses;
+			// 		} else {
+			// 			document.getElementById("ennemy-player-" + (tempIPlayer + 1)).getElementsByClassName("normal-wins")[0].innerHTML = totalWins;
+			// 			document.getElementById("ennemy-player-" + (tempIPlayer + 1)).getElementsByClassName("ranked-wins-losses")[0].innerHTML = rankedWins + "/" + rankedLosses;
+			// 		}
+			// 		tempIPlayer++;
+			// 	});
+			// 	if(participants[i].teamId === 100) {
+			// 		document.getElementById("friendly-player-" + (i + 1)).getElementsByClassName("name")[0].innerHTML = participants[i].summonerName;
+			// 	} else {
+			// 		document.getElementById("ennemy-player-" + (i + 1)).getElementsByClassName("name")[0].innerHTML = participants[i].summonerName;
+			// 	}
+			// }
 		});
 		
 	}

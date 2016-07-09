@@ -79,6 +79,10 @@ table tbody tr td {
     background: white;
 }
 
+table tbody tr.worst-player td {
+    background: #F08080 !important;
+}
+
 table tbody tr:nth-child(odd) td {
     background: #f9f9f9;
 }

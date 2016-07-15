@@ -1,4 +1,5 @@
 $(document).ready(function() {
+	console.log('ready');
 	var urlRiotApi = "https://euw.api.pvp.net/api/lol/euw/";
 	var apiKey = "RGAPI-867226E0-C67A-4686-88B0-9F027A3D4CA8";
 

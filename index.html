@@ -1,134 +1,72 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Data Vizualisation - TP1</title>
-		<!-- Inclusion CSS (librairie + perso) -->
-		<link rel="stylesheet" type="text/css" href="css/datalol.css">
-		<link rel="stylesheet" type="text/css" href="css/champions.css">
-		
-		<!-- Inclusion JS (librairie + scripts de création de graph) -->
-		<script src="https://code.jquery.com/jquery-3.0.0.min.js" integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0=" crossorigin="anonymous"></script>
-		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.6/Chart.min.js"></script>
-		<script src="https://code.highcharts.com/highcharts.js"></script>
-		<script src="https://code.highcharts.com/modules/exporting.js"></script>
-		<script type="text/javascript" src="js/datalol.js"></script>
-		<script type="text/javascript" src="js/highchartTheme.js"></script>
-		<script type="text/javascript" src="js/timer.js"></script>
-	</head>
-	<body>
-		<input type="text" id="search-input">
-		<input type="button" value="Go!" id="search-button">
-		<div class="container">
-			<canvas id="chartRecentGames"></canvas>
-		</div>
-		<div id="current-game">
-			<div id="timer">
-				<span class="hours">00:</span>
-				<span class="minutes">00:</span>
-				<span class="seconds">00</span>
-			</div>
-			<div id="friendly-players">
-				<table>
-					<thead>
-						<tr>
-							<th class="name">Name</th>
-				            <th class="champion">Champion</th>
-				            <th class="nw">Wins</th>            
-				            <th class="rw">Ranked Wins</th>
-				            <th class="kd"><span class="tip">KDA</span></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr id="friendly-player-1">
-							<td class="name"></td>
-							<td class="champion"></td>
-							<td class="normal-wins"></td>
-							<td class="ranked-wins-losses"></td>
-							<td class="champion-kda"></td>
-						</tr>
-						<tr id="friendly-player-2">
-							<td class="name"></td>
-							<td class="champion"></td>
-							<td class="normal-wins"></td>
-							<td class="ranked-wins-losses"></td>
-							<td class="champion-kda"></td>
-						</tr>
-						<tr id="friendly-player-3">
-							<td class="name"></td>
-							<td class="champion"></td>
-							<td class="normal-wins"></td>
-							<td class="ranked-wins-losses"></td>
-							<td class="champion-kda"></td>
-						</tr>
-						<tr id="friendly-player-4">
-							<td class="name"></td>
-							<td class="champion"></td>
-							<td class="normal-wins"></td>
-							<td class="ranked-wins-losses"></td>
-							<td class="champion-kda"></td>
-						</tr>
-						<tr id="friendly-player-5">
-							<td class="name"></td>
-							<td class="champion"></td>
-							<td class="normal-wins"></td>
-							<td class="ranked-wins-losses"></td>
-							<td class="champion-kda"></td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div id="ennemy-players">
-				<table>
-					<thead>
-						<tr>
-							<th class="name">Name</th>
-				            <th class="champion">Champion</th>
-				            <th class="nw">Wins</th>            
-				            <th class="rw">Ranked Wins</th>
-				            <th class="kd"><span class="tip">KDA</span></th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr id="ennemy-player-6">
-							<td class="name"></td>
-							<td class="champion"></td>
-							<td class="normal-wins"></td>
-							<td class="ranked-wins-losses"></td>
-							<td class="champion-kda"></td>
-						</tr>
-						<tr id="ennemy-player-7">
-							<td class="name"></td>
-							<td class="champion"></td>
-							<td class="normal-wins"></td>
-							<td class="ranked-wins-losses"></td>
-							<td class="champion-kda"></td>
-						</tr>
-						<tr id="ennemy-player-8">
-							<td class="name"></td>
-							<td class="champion"></td>
-							<td class="normal-wins"></td>
-							<td class="ranked-wins-losses"></td>
-							<td class="champion-kda"></td>
-						</tr>
-						<tr id="ennemy-player-9">
-							<td class="name"></td>
-							<td class="champion"></td>
-							<td class="normal-wins"></td>
-							<td class="ranked-wins-losses"></td>
-							<td class="champion-kda"></td>
-						</tr>
-						<tr id="ennemy-player-10">
-							<td class="name"></td>
-							<td class="champion"></td>
-							<td class="normal-wins"></td>
-							<td class="ranked-wins-losses"></td>
-							<td class="champion-kda"></td>
-						</tr>
-					</tbody>
-				</table>
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
 
-			</div>
-		</div>
-		<div id="chartMostPlayedChampions" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-	</body>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+
+  <title>My App</title>
+
+  <link rel="shortcut icon" sizes="32x32" href="/images/app-icon-32.png">
+
+  <meta name="theme-color" content="#fff">
+  <link rel="manifest" href="/manifest.json">
+
+  <script>
+
+    // setup Polymer options
+    window.Polymer = {lazyRegister: true, dom: 'shadow'};
+
+    // load webcomponents polyfills
+    (function() {
+      if ('registerElement' in document
+          && 'import' in document.createElement('link')
+          && 'content' in document.createElement('template')) {
+        // browser has web components
+      } else {
+        // polyfill web components
+        var e = document.createElement('script');
+        e.src = '/bower_components/webcomponentsjs/webcomponents-lite.min.js';
+        document.head.appendChild(e);
+      }
+    })();
+
+    // load pre-caching service worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('/service-worker.js');
+      });
+    }
+
+  </script>
+
+  <link rel="import" href="/src/my-app.html">
+
+  <style>
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', 'Noto', sans-serif;
+      line-height: 1.5;
+      min-height: 100vh;
+      background-color: #eee;
+    }
+
+  </style>
+
+</head>
+<body>
+
+  <my-app></my-app>
+
+</body>
 </html>

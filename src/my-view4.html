@@ -1,0 +1,137 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+
+<dom-module id="my-view4">
+
+  <template>
+
+    <style>
+      :host {
+        display: block;
+        padding: 10px;
+      }
+      .card {
+        box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        padding: 16px;
+        margin: 24px;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #757575;
+      }
+      .circle {
+        display: inline-block;
+        height: 64px;
+        width: 64px;
+        border-radius: 50%;
+        background: #ddd;
+        line-height: 64px;
+        font-size: 30px;
+        color: #555;
+        text-align: center;
+      }
+      h1 {
+        font-size: 22px;
+        margin: 16px 0;
+        color: #212121;
+      }
+    </style>
+
+    <select type="text" id="searchInputChampion1"></select>
+    <input type="button" value="Go!" id="searchButton">
+    <select type="text" id="searchInputChampion2"></select>
+    <div class="container">
+      <canvas id="chartRadar"></canvas>
+    </div>
+
+  </template>
+  
+  <script>
+
+    Polymer({
+
+      is: 'my-view4',
+      ready: function() {
+        var myView = this;
+        var urlRiotApi = "https://euw.api.pvp.net/api/lol/euw/";
+        var apiKey = "RGAPI-867226E0-C67A-4686-88B0-9F027A3D4CA8";
+        var championList;
+
+        $.get("https://global.api.pvp.net/api/lol/static-data/euw/v1.2/champion?dataById=true&champData=all&api_key=" + apiKey, function(response) {
+          console.log(response);
+          championList = response.data;
+          var selChamp1 = myView.$.searchInputChampion1;
+          var selChamp2 = myView.$.searchInputChampion2;
+
+          for (var key in championList) {
+            var opt = document.createElement('option');
+            opt.innerHTML = championList[key].key;
+            opt.value = championList[key].id;
+            selChamp2.appendChild(opt);
+            var opt2 = opt.cloneNode(true);
+            selChamp1.appendChild(opt2);
+          }
+        });
+
+        this.$.searchButton.addEventListener("click", function() {
+          var firstChampion = myView.$.searchInputChampion1.value;
+          var secondChampion = myView.$.searchInputChampion2.value;
+          console.log(championList);
+          console.log(firstChampion);
+          console.log(championList[firstChampion]);
+          console.log(championList[secondChampion]);
+          // $.get(urlRiotApi + "v1.4/summoner/by-name/" + encodeURI(summonerName) + "?api_key=" + apiKey, function(response) {
+          //   drawChartLastMatches(summonerId);
+          // });
+          var data = {
+          labels: ["Armor", "Attack damage", "Attack range", "HP", "MP", "HP Regen", "MP Regen"],
+          datasets: [
+              {
+                  label: championList[firstChampion].name,
+                  backgroundColor: "rgba(179,181,198,0.2)",
+                  borderColor: "rgba(179,181,198,1)",
+                  pointBackgroundColor: "rgba(179,181,198,1)",
+                  pointBorderColor: "#fff",
+                  pointHoverBackgroundColor: "#fff",
+                  pointHoverBorderColor: "rgba(179,181,198,1)",
+                  data: [championList[firstChampion].stats.armor, championList[firstChampion].stats.attackdamage, championList[firstChampion].stats.attackrange, championList[firstChampion].stats.hp, championList[firstChampion].stats.mp, championList[firstChampion].stats.hpregen, championList[firstChampion].stats.mpregen]
+              },
+              {
+                  label: championList[secondChampion].name,
+                  backgroundColor: "rgba(255,99,132,0.2)",
+                  borderColor: "rgba(255,99,132,1)",
+                  pointBackgroundColor: "rgba(255,99,132,1)",
+                  pointBorderColor: "#fff",
+                  pointHoverBackgroundColor: "#fff",
+                  pointHoverBorderColor: "rgba(255,99,132,1)",
+                  data: [championList[secondChampion].stats.armor, championList[secondChampion].stats.attackdamage, championList[secondChampion].stats.attackrange, championList[secondChampion].stats.hp, championList[secondChampion].stats.mp, championList[secondChampion].stats.hpregen, championList[secondChampion].stats.mpregen]
+              }
+            ]
+          };
+          
+          var ctx = myView.$.chartRadar.getContext("2d");
+          var myChart = new Chart(ctx, {
+              type: "radar",
+              data: data,
+              options: {
+                      scale: {
+                          reverse: true,
+                          ticks: {
+                              beginAtZero: true
+                          }
+                      }
+              }
+          });
+        });
+    }
+  });
+  </script>
+</dom-module>

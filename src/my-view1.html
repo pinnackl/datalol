@@ -59,13 +59,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       is: 'my-view1',
       ready: function() {
-        console.log(this.$$('.container'));
         var myView = this;
         var urlRiotApi = "https://euw.api.pvp.net/api/lol/euw/";
         var apiKey = "RGAPI-867226E0-C67A-4686-88B0-9F027A3D4CA8";
         this.$.searchButton.addEventListener("click", function() {
           var summonerName = myView.$.searchInput.value.toLowerCase().replace(/\s+/g, '');
-          // summonerName = "alaixys";
           $.get(urlRiotApi + "v1.4/summoner/by-name/" + encodeURI(summonerName) + "?api_key=" + apiKey, function(response) {
             var summonerId = response[summonerName].id;
             drawChartLastMatches(summonerId);

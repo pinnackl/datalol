@@ -45,11 +45,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <div class="card">
-      <div class="circle">1</div>
-      <h1>View One</h1>
-      <p>Ut labores minimum atomorum pro. Laudem tibique ut has.
-      <p>Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Lorem ipsum dolor sit amet, per in nusquam nominavi periculis, sit elit oportere ea.Cu mei vide viris gloriatur, at populo eripuit sit.</p>
+    <input type="text" id="searchInput">
+    <input type="button" value="Go!" id="searchButton">
+    <div class="container">
+      <canvas id="chartRecentGames"></canvas>
     </div>
 
   </template>
@@ -58,8 +57,73 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
 
-      is: 'my-view1'
+      is: 'my-view1',
+      ready: function() {
+        console.log(this.$$('.container'));
+        var myView = this;
+        var urlRiotApi = "https://euw.api.pvp.net/api/lol/euw/";
+        var apiKey = "RGAPI-867226E0-C67A-4686-88B0-9F027A3D4CA8";
+        this.$.searchButton.addEventListener("click", function() {
+          var summonerName = myView.$.searchInput.value.toLowerCase().replace(/\s+/g, '');
+          // summonerName = "alaixys";
+          $.get(urlRiotApi + "v1.4/summoner/by-name/" + encodeURI(summonerName) + "?api_key=" + apiKey, function(response) {
+            var summonerId = response[summonerName].id;
+            drawChartLastMatches(summonerId);
+            getMostPlayedChampions(summonerId);
+            getCurrentGame(summonerId);
+          });
+        });
 
+        function drawChartLastMatches(summonerId) {
+          $.get(urlRiotApi + "v1.3/game/by-summoner/" + summonerId + "/recent?api_key=" + apiKey, function(response) {
+            var lastGames = response.games,
+              gamesWon = 0,
+              gamesLose = 0;
+
+            for(var i = 0; i < lastGames.length; i++) {
+              if(lastGames[i].stats.win === true) {
+                gamesWon += 1;
+              } else {
+                gamesLose += 1;
+              }
+            }
+
+            var ctx = myView.$.chartRecentGames.getContext("2d");
+            var myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ["Games lose", "Games won"],
+                    datasets: [{
+                        label: '# of games played',
+                        data: [gamesWon, gamesLose],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(32, 79, 21, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(32, 79, 21, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            },
+                            scaleLabel: {
+                          display: true,
+                          labelString: 'Number of games played'
+                      }
+                        }]
+                    }
+                }
+            });
+          });
+        }
+      }
     });
 
   </script>

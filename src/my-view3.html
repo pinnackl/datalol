@@ -307,7 +307,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <th class="champion">Champion</th>
                     <th class="nw">Wins</th>            
                     <th class="rw">Ranked Wins</th>
-                    <th class="kd"><span class="tip">KDA</span></th>
+                    <th class="kd"><span class="tip">Ratio</span></th>
             </tr>
           </thead>
           <tbody>
@@ -357,7 +357,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     <th class="champion">Champion</th>
                     <th class="nw">Wins</th>            
                     <th class="rw">Ranked Wins</th>
-                    <th class="kd"><span class="tip">KDA</span></th>
+                    <th class="kd"><span class="tip">Ratio</span></th>
             </tr>
           </thead>
           <tbody>
@@ -415,7 +415,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var apiKey = "RGAPI-867226E0-C67A-4686-88B0-9F027A3D4CA8";
         this.$.searchButton.addEventListener("click", function() {
           var summonerName = myView.$.searchInput.value.toLowerCase().replace(/\s+/g, '');
-          // summonerName = "alaixys";
+
           $.get(urlRiotApi + "v1.4/summoner/by-name/" + encodeURI(summonerName) + "?api_key=" + apiKey, function(response) {
             var summonerId = response[summonerName].id;
             getCurrentGame(summonerId);
@@ -439,6 +439,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             var looper = 10;
             var i = 0;
             var worstPlayer;
+            var ratio = 0;
             (function myLoop () {          
                setTimeout(function () {
                   var span = document.createElement('span');
@@ -459,45 +460,45 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   });
 
                   $.get(urlRiotApi + "v1.3/stats/by-summoner/" + participants[i].summonerId + "/summary?api_key=" + apiKey, function(response) {
-                  var playerStats = response.playerStatSummaries;
-                  var totalWins = 0,
-                    rankedWins = 0,
-                    rankedLosses = 0;
+                    var playerStats = response.playerStatSummaries;
+                    console.log(response);
+                    var totalWins = 0,
+                      rankedWins = 0,
+                      rankedLosses = 0;
 
-                  var ratio = 0;
-                  for(var i = 0; i < playerStats.length; i++) {
-                    totalWins += playerStats[i].wins;
-                    if(playerStats[i].playerStatSummaryType == "RankedSolo5x5") {
-                      if(tempIPlayer == 5) {
-                        ratio = playerStats[i].wins / playerStats[i].losses;
-                        worstPlayer = tempIPlayer;
-                      } else if (tempIPlayer > 5 && ((playerStats[i].wins / playerStats[i].losses) < ratio)) {
-                        ratio = playerStats[i].wins / playerStats[i].losses;
-                        worstPlayer = tempIPlayer;
-                        console.log('coucou');
+                    for(var i = 0; i < playerStats.length; i++) {
+                      totalWins += playerStats[i].wins;
+
+                      if(playerStats[i].playerStatSummaryType == "RankedSolo5x5") {
+                        if(tempIPlayer == 5) {
+                          ratio = playerStats[i].wins / playerStats[i].losses;
+                          worstPlayer = tempIPlayer;
+                        } else if (tempIPlayer > 5 && ((playerStats[i].wins / playerStats[i].losses) < ratio)) {
+                          ratio = playerStats[i].wins / playerStats[i].losses;
+                          worstPlayer = tempIPlayer;
+                        }
+                        rankedWins = playerStats[i].wins;
+                        rankedLosses = playerStats[i].losses;
+                        if(participants[tempIPlayer].teamId === 100) {
+                          myView.$$(".friendly-player-" + (tempIPlayer + 1) + " .champion-kda").innerHTML = (playerStats[i].wins / playerStats[i].losses).toFixed(2);
+                        } else {
+                          myView.$$(".ennemy-player-" + (tempIPlayer + 1) + " .champion-kda").innerHTML = (playerStats[i].wins / playerStats[i].losses).toFixed(2);
+                        }
                       }
-                      console.log(tempIPlayer > 5);
-                      console.log(playerStats[i].wins / playerStats[i].losses);
-                      console.log(ratio);
-                      console.log(((playerStats[i].wins / playerStats[i].losses) < ratio));
-                      rankedWins = playerStats[i].wins;
-                      rankedLosses = playerStats[i].losses;
-                      // console.log("Joueur : " + tempIPlayer + " " + (playerStats[i].wins / playerStats[i].losses));
                     }
-                  }
-                  console.log(worstPlayer);
-                  if(tempIPlayer == 9) {
-                    myView.$$(".ennemy-player-" + (worstPlayer + 1)).className += " worst-player";
-                  }
 
-                  if(participants[tempIPlayer].teamId === 100) {
-                    myView.$$(".friendly-player-" + (tempIPlayer + 1) + " .normal-wins").innerHTML = totalWins;
-                    myView.$$(".friendly-player-" + (tempIPlayer + 1) + " .ranked-wins-losses").innerHTML = rankedWins + "/" + rankedLosses;
-                  } else {
-                    myView.$$(".ennemy-player-" + (tempIPlayer + 1) + " .normal-wins").innerHTML = totalWins;
-                    myView.$$(".ennemy-player-" + (tempIPlayer + 1) + " .ranked-wins-losses").innerHTML = rankedWins + "/" + rankedLosses;
-                  }
-                  tempIPlayer++;
+                    if(tempIPlayer == 9) {
+                      myView.$$(".ennemy-player-" + (worstPlayer + 1)).className += " worst-player";
+                    }
+
+                    if(participants[tempIPlayer].teamId === 100) {
+                      myView.$$(".friendly-player-" + (tempIPlayer + 1) + " .normal-wins").innerHTML = totalWins;
+                      myView.$$(".friendly-player-" + (tempIPlayer + 1) + " .ranked-wins-losses").innerHTML = rankedWins + "/" + rankedLosses;
+                    } else {
+                      myView.$$(".ennemy-player-" + (tempIPlayer + 1) + " .normal-wins").innerHTML = totalWins;
+                      myView.$$(".ennemy-player-" + (tempIPlayer + 1) + " .ranked-wins-losses").innerHTML = rankedWins + "/" + rankedLosses;
+                    }
+                    tempIPlayer++;
                 });
                 if(participants[i].teamId === 100) {
                   myView.$$(".friendly-player-" + (i + 1) + " .name").innerHTML = participants[i].summonerName;

@@ -290,7 +290,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
     </style>
-    
+
     <paper-input label="Pseudo" id="searchInput"></paper-input>
     <paper-button raised id="searchButton">GO</paper-button>
     <div id="current-game">
@@ -464,24 +464,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     rankedWins = 0,
                     rankedLosses = 0;
 
-
+                  var ratio = 0;
                   for(var i = 0; i < playerStats.length; i++) {
                     totalWins += playerStats[i].wins;
                     if(playerStats[i].playerStatSummaryType == "RankedSolo5x5") {
                       if(tempIPlayer == 5) {
-                        var ratio = playerStats[i].wins / playerStats[i].losses;
-                        worstPlayer = tempIPlayer;
-                      } else if (tempIPlayer > 5 && (playerStats[i].wins / playerStats[i].losses < ratio)) {
                         ratio = playerStats[i].wins / playerStats[i].losses;
                         worstPlayer = tempIPlayer;
+                      } else if (tempIPlayer > 5 && ((playerStats[i].wins / playerStats[i].losses) < ratio)) {
+                        ratio = playerStats[i].wins / playerStats[i].losses;
+                        worstPlayer = tempIPlayer;
+                        console.log('coucou');
                       }
+                      console.log(tempIPlayer > 5);
+                      console.log(playerStats[i].wins / playerStats[i].losses);
+                      console.log(ratio);
+                      console.log(((playerStats[i].wins / playerStats[i].losses) < ratio));
                       rankedWins = playerStats[i].wins;
                       rankedLosses = playerStats[i].losses;
+                      // console.log("Joueur : " + tempIPlayer + " " + (playerStats[i].wins / playerStats[i].losses));
                     }
                   }
-
+                  console.log(worstPlayer);
                   if(tempIPlayer == 9) {
-                    console.log(myView.$$(".ennemy-player-" + (worstPlayer + 1)));
                     myView.$$(".ennemy-player-" + (worstPlayer + 1)).className += " worst-player";
                   }
 

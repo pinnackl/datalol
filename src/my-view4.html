@@ -49,12 +49,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
 
     <div class="dropdown-container">
-      <paper-dropdown-menu label="Select second champion" id="dropdown1">
+      <paper-dropdown-menu label="Select first champion" id="dropdown1">
         <paper-listbox class="dropdown-content" id="searchInputChampion1">
         </paper-listbox>
       </paper-dropdown-menu>
       <paper-button raised id="searchButton">GO</paper-button>
-      <paper-dropdown-menu label="Select first champion" id="dropdown2">
+      <paper-dropdown-menu label="Select second champion" id="dropdown2">
         <paper-listbox class="dropdown-content" id="searchInputChampion2">
         </paper-listbox>
       </paper-dropdown-menu>
@@ -132,7 +132,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                           ticks: {
                               beginAtZero: true
                           }
-                      }
+                      },
+                      scaleSteps: 10
               }
           });
         });

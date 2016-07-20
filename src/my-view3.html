@@ -284,10 +284,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .champions-lol-28.aurelion-sol { background-position:-252px -336px; }
       .champions-lol-28.taliyah { background-position:-0px -364px; }
       .champions-lol-28 { width:28px; height:28px; background-image:url(http://media-noxia.cursecdn.com/avatars/sprites/champions-lol-28/champions-lol-28.Jpeg?636033349421774366) }
+      #searchInput {
+        width: 250px;
+        display: inline-block;
+      }
 
     </style>
-    <input type="text" id="searchInput">
-    <input type="button" value="Go!" id="searchButton">
+    
+    <paper-input label="Pseudo" id="searchInput"></paper-input>
+    <paper-button raised id="searchButton">GO</paper-button>
     <div id="current-game">
       <div id="timer">
         <span class="hours">00:</span>

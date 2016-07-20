@@ -59,10 +59,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .participants {
         display: block;
       }
+      #searchInput {
+        width: 250px;
+        display: inline-block;
+      }
     </style>
 
-    <input type="text" id="searchInput">
-    <input type="button" value="Go!" id="searchButton">
+    <paper-input label="Pseudo" id="searchInput"></paper-input>
+    <paper-button raised id="searchButton">GO</paper-button>
     <div id="chartMostPlayedChampions" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
   </template>

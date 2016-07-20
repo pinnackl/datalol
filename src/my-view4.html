@@ -43,11 +43,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin: 16px 0;
         color: #212121;
       }
+      .dropdown-container {
+        text-align: center;
+      }
     </style>
 
-    <select type="text" id="searchInputChampion1"></select>
-    <input type="button" value="Go!" id="searchButton">
-    <select type="text" id="searchInputChampion2"></select>
+    <div class="dropdown-container">
+      <paper-dropdown-menu label="Select second champion" id="dropdown1">
+        <paper-listbox class="dropdown-content" id="searchInputChampion1">
+        </paper-listbox>
+      </paper-dropdown-menu>
+      <paper-button raised id="searchButton">GO</paper-button>
+      <paper-dropdown-menu label="Select first champion" id="dropdown2">
+        <paper-listbox class="dropdown-content" id="searchInputChampion2">
+        </paper-listbox>
+      </paper-dropdown-menu>
+    </div>
     <div class="container">
       <canvas id="chartRadar"></canvas>
     </div>
@@ -72,9 +83,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var selChamp2 = myView.$.searchInputChampion2;
 
           for (var key in championList) {
-            var opt = document.createElement('option');
+            var opt = document.createElement('paper-item');
             opt.innerHTML = championList[key].key;
-            opt.value = championList[key].id;
+            opt.setAttribute('data-value', championList[key].id);
             selChamp2.appendChild(opt);
             var opt2 = opt.cloneNode(true);
             selChamp1.appendChild(opt2);
@@ -82,17 +93,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         });
 
         this.$.searchButton.addEventListener("click", function() {
-          var firstChampion = myView.$.searchInputChampion1.value;
-          var secondChampion = myView.$.searchInputChampion2.value;
-          console.log(championList);
-          console.log(firstChampion);
-          console.log(championList[firstChampion]);
-          console.log(championList[secondChampion]);
-          // $.get(urlRiotApi + "v1.4/summoner/by-name/" + encodeURI(summonerName) + "?api_key=" + apiKey, function(response) {
-          //   drawChartLastMatches(summonerId);
-          // });
+          var firstChampion = myView.$.dropdown1.selectedItem.getAttribute('data-value');
+          var secondChampion = myView.$.dropdown2.selectedItem.getAttribute('data-value');
+
           var data = {
-          labels: ["Armor", "Attack damage", "Attack range", "HP", "MP", "HP Regen", "MP Regen"],
+          labels: ["Attack", "Defense", "Magic", "Difficulty"],
           datasets: [
               {
                   label: championList[firstChampion].name,
@@ -102,7 +107,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   pointBorderColor: "#fff",
                   pointHoverBackgroundColor: "#fff",
                   pointHoverBorderColor: "rgba(179,181,198,1)",
-                  data: [championList[firstChampion].stats.armor, championList[firstChampion].stats.attackdamage, championList[firstChampion].stats.attackrange, championList[firstChampion].stats.hp, championList[firstChampion].stats.mp, championList[firstChampion].stats.hpregen, championList[firstChampion].stats.mpregen]
+                  data: [championList[firstChampion].info.attack, championList[firstChampion].info.defense, championList[firstChampion].info.magic, championList[firstChampion].info.difficulty]
               },
               {
                   label: championList[secondChampion].name,
@@ -112,7 +117,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                   pointBorderColor: "#fff",
                   pointHoverBackgroundColor: "#fff",
                   pointHoverBorderColor: "rgba(255,99,132,1)",
-                  data: [championList[secondChampion].stats.armor, championList[secondChampion].stats.attackdamage, championList[secondChampion].stats.attackrange, championList[secondChampion].stats.hp, championList[secondChampion].stats.mp, championList[secondChampion].stats.hpregen, championList[secondChampion].stats.mpregen]
+                  data: [championList[secondChampion].info.attack, championList[secondChampion].info.defense, championList[secondChampion].info.magic, championList[secondChampion].info.difficulty]
               }
             ]
           };
@@ -123,7 +128,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               data: data,
               options: {
                       scale: {
-                          reverse: true,
+                          reverse: false,
                           ticks: {
                               beginAtZero: true
                           }
